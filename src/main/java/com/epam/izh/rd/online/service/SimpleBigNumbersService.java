@@ -56,7 +56,4 @@ public class SimpleBigNumbersService implements BigNumbersService {
         }
         return primaryNumberFound;
     }
-
-    public static void main(String[] args) {
-    }
 }
