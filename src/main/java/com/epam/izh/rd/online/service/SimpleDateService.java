@@ -25,7 +25,7 @@ public class SimpleDateService implements DateService {
      */
     @Override
     public LocalDateTime parseString(String string) {
-        return LocalDateTime.parse(string,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        return LocalDateTime.parse(string, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
     /**
@@ -48,7 +48,7 @@ public class SimpleDateService implements DateService {
     @Override
     public long getNextLeapYear() {
         LocalDate currentDate = LocalDate.now();
-        while (!currentDate.isLeapYear()){
+        while (!currentDate.isLeapYear()) {
             currentDate = currentDate.plusYears(1);
         }
         return currentDate.getYear();
