@@ -46,6 +46,21 @@ public class SimpleRegExpService implements RegExpService {
             e.printStackTrace();
         }
 
-        return textFromFile.toString().replaceAll("(\\$\\{payment_amount})(.+)(\\$\\{balance})(.+)", String.format("%.0f$2%.0f$4", paymentAmount, balance));
+        String finalText = textFromFile.toString();
+        Pattern pattern = Pattern.compile("\\$\\{payment_amount}");
+        Matcher matcher = pattern.matcher(finalText);
+
+        while (matcher.find()) {
+            finalText = matcher.replaceAll(String.format("%.0f", paymentAmount));
+        }
+
+        pattern = Pattern.compile("\\$\\{balance}");
+        matcher = pattern.matcher(finalText);
+
+        while (matcher.find()) {
+            finalText = matcher.replaceAll(String.format("%.0f", balance));
+        }
+
+        return finalText;
     }
 }
