@@ -1,5 +1,9 @@
 package com.epam.izh.rd.online.service;
 
+import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SimpleRegExpService implements RegExpService {
 
     /**
@@ -11,8 +15,18 @@ public class SimpleRegExpService implements RegExpService {
      */
     @Override
     public String maskSensitiveData() {
-        return null;
+        StringBuilder textFromFile = new StringBuilder();
+        try (FileReader fileReader = new FileReader(new File("src\\main\\resources\\sensitive_data.txt"));
+             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+            while (bufferedReader.ready()) {
+                textFromFile.append(bufferedReader.readLine());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return textFromFile.toString().replaceAll("(\\s\\d{4})(\\s\\d{4}\\s\\d{4}\\s)(\\d{4}\\s)", "$1 **** **** $3");
     }
+
 
     /**
      * Метод должен считыввать файл sensitive_data.txt (из директории resources) и заменять плейсхолдер ${payment_amount} и ${balance} на заданные числа. Метод должен
@@ -22,6 +36,31 @@ public class SimpleRegExpService implements RegExpService {
      */
     @Override
     public String replacePlaceholders(double paymentAmount, double balance) {
-        return null;
+        StringBuilder textFromFile = new StringBuilder();
+        try (FileReader fileReader = new FileReader("src\\main\\resources\\sensitive_data.txt");
+             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+            while (bufferedReader.ready()) {
+                textFromFile.append(bufferedReader.readLine());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String finalText = textFromFile.toString();
+        Pattern pattern = Pattern.compile("\\$\\{payment_amount}");
+        Matcher matcher = pattern.matcher(finalText);
+
+        while (matcher.find()) {
+            finalText = matcher.replaceAll(String.format("%.0f", paymentAmount));
+        }
+
+        pattern = Pattern.compile("\\$\\{balance}");
+        matcher = pattern.matcher(finalText);
+
+        while (matcher.find()) {
+            finalText = matcher.replaceAll(String.format("%.0f", balance));
+        }
+
+        return finalText;
     }
 }
